@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f2a43">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Inventory Denpasar Residence</title>
+<style>
+  html,body{margin:0;height:100%;background:#0f2a43;font-family:system-ui,sans-serif}
+  #app{position:fixed;inset:0;width:100%;height:100%;border:0;background:#fff}
+  #reload{position:fixed;right:10px;bottom:10px;z-index:10;border:0;border-radius:999px;
+    padding:8px 12px;font-size:12px;background:rgba(15,42,67,.85);color:#fff}
+  #offline{display:none;position:fixed;inset:0;z-index:20;background:#0f2a43;color:#fff;
+    align-items:center;justify-content:center;text-align:center;padding:24px}
+</style>
+</head>
+<body>
+<iframe id="app" allow="clipboard-read; clipboard-write; camera; microphone"></iframe>
+<button id="reload">Muat ulang</button>
+
+<div id="offline">
+  <div>
+    <h2>Tidak ada koneksi</h2>
+    <p>Aplikasi membutuhkan internet untuk membuka data.</p>
+    <button onclick="location.reload()">Coba lagi</button>
+  </div>
+</div>
+
+<script>
+  const APP_URL = 'https://script.google.com/macros/s/AKfycbz9JAxkL49ZoFQKTyg0WLVcpZk8B3V7c8C7BhCp47hbEkTMUL5KLbrfNk3WlsCfsJOE/exec';
+
+  const frame = document.getElementById('app');
+  const offline = document.getElementById('offline');
+
+  function load() {
+    if (!navigator.onLine) { offline.style.display = 'flex'; return; }
+    offline.style.display = 'none';
+    frame.src = APP_URL;
+  }
+  document.getElementById('reload').onclick = load;
+  window.addEventListener('online', load);
+  window.addEventListener('offline', () => { offline.style.display = 'flex'; });
+
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+  load();
+</script>
+</body>
+</html>
